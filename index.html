@@ -12,6 +12,10 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="style.css">
+
     <script>
         tailwind.config = {
             theme: {
@@ -26,15 +30,13 @@
                         'brand-white': '#ffffff',
                         'brand-light': '#f9f9f9',
                         'brand-black': '#111111',
-                        'brand-gray': '#e5e5e5',
                     },
                     animation: {
                         'fade-in-blur': 'fadeInBlur 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                         'zoom-slow': 'zoomSlow 20s linear infinite alternate',
                         'mist-flow': 'mistFlow 60s linear infinite',
-                        'slide-up': 'slideUp 0.5s ease-out forwards',
-                        'neon-pulse': 'neonPulse 3s ease-in-out infinite alternate',
                         'float': 'float 8s ease-in-out infinite',
+                        'neon-pulse': 'neonPulse 3s ease-in-out infinite alternate',
                     },
                     keyframes: {
                         fadeInBlur: {
@@ -49,10 +51,6 @@
                             '0%': { backgroundPosition: '0% 0%' },
                             '100%': { backgroundPosition: '100% 0%' },
                         },
-                        slideUp: {
-                            '0%': { transform: 'translateY(20px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' },
-                        },
                         neonPulse: {
                             '0%': { filter: 'drop-shadow(0 0 2px rgba(255,255,255,0.5))' },
                             '100%': { filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.8))' }
@@ -61,18 +59,11 @@
                             '0%, 100%': { transform: 'translateY(0)' },
                             '50%': { transform: 'translateY(-10px)' },
                         }
-                    },
-                    screens: {
-                        'xs': '375px',
                     }
                 }
             }
         }
     </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <link rel="stylesheet" href="style.css">
 </head>
 <body class="font-sans text-brand-black selection:bg-black selection:text-white">
 
@@ -85,27 +76,27 @@
 
     <nav id="navbar" class="fixed top-0 w-full z-50 px-5 py-6 transition-all duration-500">
         <div class="max-w-7xl mx-auto flex justify-between items-center h-10">
-            <a href="#" onclick="showHome()" class="font-header font-bold uppercase text-white z-50 flex flex-col justify-center leading-none group cursor-pointer mix-blend-difference">
+            <a href="#" class="font-header font-bold uppercase text-white z-50 flex flex-col justify-center leading-none group cursor-pointer mix-blend-difference">
                 <span class="text-[0.6rem] tracking-[0.4em] opacity-80 mb-1 group-hover:tracking-[0.5em] transition-all duration-500">kryptos</span>
                 <span class="text-xl md:text-2xl tracking-[0.2em]">ARKA</span>
             </a>
             
             <div class="hidden md:flex space-x-12 font-body text-xs tracking-[0.2em] font-medium uppercase text-white/80 mix-blend-difference">
-                <a href="#" onclick="showHome(); setTimeout(() => document.getElementById('collection').scrollIntoView({behavior:'smooth'}), 100)" class="hover:text-white transition-colors relative group py-2">Collection</a>
-                <a href="#" onclick="showHome(); setTimeout(() => document.getElementById('lookbook').scrollIntoView({behavior:'smooth'}), 100)" class="hover:text-white transition-colors relative group py-2">Lookbook</a>
-                <a href="#" onclick="showHome(); setTimeout(() => document.getElementById('history').scrollIntoView({behavior:'smooth'}), 100)" class="hover:text-white transition-colors relative group py-2">Origin</a>
+                <a href="#collection" class="hover:text-white transition-colors py-2">Collection</a>
+                <a href="#lookbook" class="hover:text-white transition-colors py-2">Lookbook</a>
+                <a href="#history" class="hover:text-white transition-colors py-2">Origin</a>
             </div>
 
             <div class="flex items-center space-x-6 text-white z-50 mix-blend-difference">
-                <button class="relative group" onclick="showCart()">
-                    <i class="fas fa-shopping-bag text-lg md:text-xl group-hover:text-gray-300 transition-colors"></i>
-                    <span id="cart-count" class="absolute -top-1 -right-2 bg-white text-black text-[9px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold opacity-0 transition-opacity transform scale-0">0</span>
-                </button>
+                <a href="https://thebase.com" target="_blank" class="relative group">
+                    <i class="fas fa-external-link-alt text-lg group-hover:text-gray-300 transition-colors"></i>
+                </a>
             </div>
         </div>
     </nav>
 
-    <main id="home-view" class="view-section active">
+    <main id="home-view">
+        
         <header class="relative w-full h-[100dvh] flex items-center justify-center overflow-hidden bg-gray-900">
             <div class="absolute inset-0 z-0 overflow-hidden">
                 <div class="absolute inset-0 bg-gray-800"></div>
@@ -135,8 +126,7 @@
                 <span class="text-xs font-mono text-gray-500 hidden md:block mt-4 md:mt-0 border border-gray-200 px-4 py-2 rounded-full bg-gray-50">AW 2025</span>
             </div>
             <div id="product-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8 gap-y-10 md:gap-y-16">
-                <p class="col-span-4 text-center text-xs text-gray-400 py-10">Loading Collection...</p>
-            </div>
+                </div>
         </section>
 
         <section id="lookbook" class="py-24 bg-brand-light relative overflow-hidden">
@@ -191,72 +181,6 @@
         </footer>
     </main>
 
-    <main id="cart-view" class="view-section pt-32 px-4 md:px-8 min-h-screen bg-brand-light">
-        <div class="max-w-4xl mx-auto">
-            <div class="flex justify-between items-end border-b border-gray-300 pb-4 mb-8">
-                <h2 class="text-3xl md:text-5xl font-header font-bold uppercase text-black">Your Selection</h2>
-                <button onclick="showHome()" class="text-xs text-gray-500 hover:text-black mb-2">CONTINUE SHOPPING</button>
-            </div>
-            <div id="cart-items-container" class="space-y-8 min-h-[30vh]">
-                <p class="text-center text-gray-400 font-mono py-20 tracking-widest">YOUR CART IS EMPTY</p>
-            </div>
-            <div id="cart-summary" class="hidden border-t border-gray-300 pt-8 mt-12">
-                <div class="flex flex-col items-end space-y-2 text-sm font-mono tracking-wide">
-                    <div class="flex justify-between w-full md:w-64 text-gray-500"><span>SUBTOTAL</span><span id="cart-subtotal">¥0</span></div>
-                    <div class="flex justify-between w-full md:w-64 text-gray-500"><span>SHIPPING</span><span>CALCULATED AT NEXT STEP</span></div>
-                    <div class="flex justify-between w-full md:w-64 text-xl text-black font-bold mt-4 pt-4 border-t border-gray-300"><span>TOTAL</span><span id="cart-total">¥0</span></div>
-                </div>
-                <div class="mt-12 flex justify-end">
-                    <button onclick="showCheckout()" class="w-full md:w-64 bg-black text-white py-4 font-bold text-xs tracking-[0.2em] hover:bg-gray-800 transition-colors uppercase">Proceed to Checkout</button>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <main id="checkout-view" class="view-section pt-32 px-4 md:px-8 min-h-screen bg-brand-light">
-        <div class="max-w-2xl mx-auto">
-             <div class="flex justify-between items-end border-b border-gray-300 pb-4 mb-8">
-                <h2 class="text-3xl font-header font-bold uppercase text-black">Checkout</h2>
-                <button onclick="showCart()" class="text-xs text-gray-500 hover:text-black mb-2">BACK TO CART</button>
-            </div>
-            <form onsubmit="event.preventDefault(); processPayment();" class="space-y-12">
-                <div>
-                    <h3 class="text-sm font-bold tracking-widest text-gray-500 mb-6 uppercase">Shipping Address</h3>
-                    <div class="space-y-4">
-                        <div class="grid grid-cols-2 gap-4">
-                             <input required type="text" placeholder="FIRST NAME" class="bg-white border border-gray-300 p-4 text-xs text-black focus:border-black outline-none placeholder-gray-400">
-                             <input required type="text" placeholder="LAST NAME" class="bg-white border border-gray-300 p-4 text-xs text-black focus:border-black outline-none placeholder-gray-400">
-                        </div>
-                        <input required type="text" placeholder="ADDRESS" class="w-full bg-white border border-gray-300 p-4 text-xs text-black focus:border-black outline-none placeholder-gray-400">
-                        <div class="grid grid-cols-2 gap-4">
-                            <input required type="text" placeholder="CITY" class="bg-white border border-gray-300 p-4 text-xs text-black focus:border-black outline-none placeholder-gray-400">
-                            <input required type="text" placeholder="POSTAL CODE" class="bg-white border border-gray-300 p-4 text-xs text-black focus:border-black outline-none placeholder-gray-400">
-                       </div>
-                    </div>
-                </div>
-                <div>
-                     <h3 class="text-sm font-bold tracking-widest text-gray-500 mb-6 uppercase">Payment</h3>
-                     <div class="bg-white border border-gray-300 p-6 space-y-4">
-                         <div class="flex items-center gap-4 mb-4">
-                             <i class="fab fa-cc-visa text-2xl text-black"></i>
-                             <i class="fab fa-cc-mastercard text-2xl text-gray-400"></i>
-                             <i class="fab fa-cc-amex text-2xl text-gray-400"></i>
-                         </div>
-                         <input required type="text" placeholder="CARD NUMBER" class="w-full bg-gray-50 border border-gray-200 p-4 text-xs text-black focus:border-black outline-none placeholder-gray-400" maxlength="19">
-                         <div class="grid grid-cols-2 gap-4">
-                             <input required type="text" placeholder="MM / YY" class="bg-gray-50 border border-gray-200 p-4 text-xs text-black focus:border-black outline-none placeholder-gray-400" maxlength="5">
-                             <input required type="text" placeholder="CVC" class="bg-gray-50 border border-gray-200 p-4 text-xs text-black focus:border-black outline-none placeholder-gray-400" maxlength="3">
-                         </div>
-                     </div>
-                </div>
-                <div class="pt-8 border-t border-gray-300">
-                    <button type="submit" class="w-full bg-black text-white py-5 font-bold text-sm tracking-[0.2em] hover:bg-gray-800 transition-colors uppercase">Pay Now</button>
-                    <p class="text-center text-[10px] text-gray-400 mt-4">SECURE ENCRYPTED PAYMENT</p>
-                </div>
-            </form>
-        </div>
-    </main>
-
     <div id="product-modal" class="fixed inset-0 z-[100] flex items-end md:items-center justify-center">
         <div class="absolute inset-0 bg-white/90 backdrop-blur-md cursor-pointer" onclick="closeModal()"></div>
         
@@ -288,54 +212,13 @@
                     
                     <p id="modal-desc" class="text-xs md:text-sm text-gray-600 leading-loose mb-8 text-center md:text-justify font-body border-t border-gray-100 pt-6 w-full">Description...</p>
                     
-                    <div class="mb-6 w-full">
-                        <span class="text-[10px] font-bold tracking-widest text-gray-400 block mb-3 text-center md:text-left font-mono">SIZE</span>
-                        <div class="grid grid-cols-4 gap-2" id="size-selector">
-                            <button class="size-btn h-10 border border-gray-200 text-xs hover:bg-black hover:text-white transition-colors text-gray-500" onclick="selectSize(this, 'S')">S</button>
-                            <button class="size-btn h-10 border border-gray-200 text-xs hover:bg-black hover:text-white transition-colors text-gray-500" onclick="selectSize(this, 'M')">M</button>
-                            <button class="size-btn h-10 border border-gray-200 text-xs hover:bg-black hover:text-white transition-colors text-gray-500" onclick="selectSize(this, 'L')">L</button>
-                            <button class="size-btn h-10 border border-gray-200 text-xs hover:bg-black hover:text-white transition-colors text-gray-500" onclick="selectSize(this, 'XL')">XL</button>
-                        </div>
-                        <p id="size-error" class="text-[10px] text-red-500 mt-2 hidden text-center">PLEASE SELECT A SIZE</p>
                     </div>
-                </div>
                 
-                <button onclick="addToCartFromModal(this)" class="w-full py-5 bg-black text-white font-bold text-xs tracking-[0.2em] hover:bg-gray-800 transition-colors uppercase mt-4 flex items-center justify-center gap-2 group active:scale-[0.98]">
-                    <span>Add to Cart</span>
-                    <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div id="admin-modal" class="fixed inset-0 z-[200] bg-black/95 text-white hidden overflow-y-auto font-mono p-4 md:p-8">
-        <div class="max-w-3xl mx-auto mt-10 md:mt-20">
-            <div class="flex justify-between items-end mb-8 border-b border-gray-800 pb-4">
-                <h2 class="text-xl font-bold tracking-widest text-red-500">ADMIN CONSOLE</h2>
-                <button onclick="closeAdmin()" class="text-xs text-gray-500 hover:text-white">[CLOSE]</button>
-            </div>
-
-            <div id="admin-list" class="space-y-2 mb-12"></div>
-            
-            <div class="border border-gray-800 p-4 md:p-6 bg-gray-900/50">
-                <p class="text-xs text-gray-500 mb-4 tracking-widest">ADD NEW ITEM</p>
-                <form onsubmit="event.preventDefault(); addProduct();" class="space-y-4">
-                    <div class="grid grid-cols-2 gap-4">
-                        <input type="text" id="p-title" required placeholder="TITLE" class="bg-black border border-gray-700 p-3 text-xs w-full text-white placeholder-gray-600 focus:border-red-500 outline-none">
-                        <input type="text" id="p-category" required placeholder="CATEGORY" class="bg-black border border-gray-700 p-3 text-xs w-full text-white placeholder-gray-600 focus:border-red-500 outline-none">
-                    </div>
-                    <input type="number" id="p-price" required placeholder="PRICE (¥)" class="bg-black border border-gray-700 p-3 text-xs w-full text-white placeholder-gray-600 focus:border-red-500 outline-none">
-                    <textarea id="p-desc" required placeholder="DESCRIPTION" rows="2" class="bg-black border border-gray-700 p-3 text-xs w-full text-white placeholder-gray-600 focus:border-red-500 outline-none"></textarea>
-                    <div class="grid grid-cols-2 gap-4">
-                        <input type="text" id="p-img1" required placeholder="IMAGE URL (MAIN)" class="bg-black border border-gray-700 p-3 text-xs w-full text-white placeholder-gray-600 focus:border-red-500 outline-none">
-                        <input type="text" id="p-img2" placeholder="IMAGE URL (SUB)" class="bg-black border border-gray-700 p-3 text-xs w-full text-white placeholder-gray-600 focus:border-red-500 outline-none">
-                    </div>
-                    <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white py-3 text-xs font-bold tracking-widest transition-colors">ADD PRODUCT</button>
-                </form>
-            </div>
-            
-            <div class="mt-8 text-center">
-                <button onclick="resetToDefault()" class="text-[10px] text-gray-600 hover:text-red-500 underline">RESET ALL DATA</button>
+                <a id="modal-link" href="#" target="_blank" class="w-full py-5 bg-black text-white font-bold text-xs tracking-[0.2em] hover:bg-gray-800 transition-colors uppercase mt-4 flex items-center justify-center gap-2 group active:scale-[0.98]">
+                    <span>PROCEED TO CHECKOUT</span>
+                    <i class="fas fa-external-link-alt group-hover:translate-x-1 transition-transform"></i>
+                </a>
+                <p class="text-[9px] text-gray-400 text-center mt-3 tracking-wide">YOU WILL BE REDIRECTED TO THE SECURE STORE</p>
             </div>
         </div>
     </div>
