@@ -113,7 +113,7 @@
             </div>
 
             <div class="absolute inset-0 z-1 flex items-center justify-center">
-                 <img src="402007.jpg" alt="Main Visual" onerror="this.style.display='none'" class="hero-main-img animate-float">
+                <img src="402007.jpg" alt="Main Visual" onerror="this.style.display='none'" class="hero-main-img animate-float">
             </div>
             
             <div class="absolute inset-0 z-2 vignette pointer-events-none"></div>
@@ -304,6 +304,38 @@
                     <span>Add to Cart</span>
                     <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="admin-modal" class="fixed inset-0 z-[200] bg-black/95 text-white hidden overflow-y-auto font-mono p-4 md:p-8">
+        <div class="max-w-3xl mx-auto mt-10 md:mt-20">
+            <div class="flex justify-between items-end mb-8 border-b border-gray-800 pb-4">
+                <h2 class="text-xl font-bold tracking-widest text-red-500">ADMIN CONSOLE</h2>
+                <button onclick="closeAdmin()" class="text-xs text-gray-500 hover:text-white">[CLOSE]</button>
+            </div>
+
+            <div id="admin-list" class="space-y-2 mb-12"></div>
+            
+            <div class="border border-gray-800 p-4 md:p-6 bg-gray-900/50">
+                <p class="text-xs text-gray-500 mb-4 tracking-widest">ADD NEW ITEM</p>
+                <form onsubmit="event.preventDefault(); addProduct();" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" id="p-title" required placeholder="TITLE" class="bg-black border border-gray-700 p-3 text-xs w-full text-white placeholder-gray-600 focus:border-red-500 outline-none">
+                        <input type="text" id="p-category" required placeholder="CATEGORY" class="bg-black border border-gray-700 p-3 text-xs w-full text-white placeholder-gray-600 focus:border-red-500 outline-none">
+                    </div>
+                    <input type="number" id="p-price" required placeholder="PRICE (¥)" class="bg-black border border-gray-700 p-3 text-xs w-full text-white placeholder-gray-600 focus:border-red-500 outline-none">
+                    <textarea id="p-desc" required placeholder="DESCRIPTION" rows="2" class="bg-black border border-gray-700 p-3 text-xs w-full text-white placeholder-gray-600 focus:border-red-500 outline-none"></textarea>
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" id="p-img1" required placeholder="IMAGE URL (MAIN)" class="bg-black border border-gray-700 p-3 text-xs w-full text-white placeholder-gray-600 focus:border-red-500 outline-none">
+                        <input type="text" id="p-img2" placeholder="IMAGE URL (SUB)" class="bg-black border border-gray-700 p-3 text-xs w-full text-white placeholder-gray-600 focus:border-red-500 outline-none">
+                    </div>
+                    <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white py-3 text-xs font-bold tracking-widest transition-colors">ADD PRODUCT</button>
+                </form>
+            </div>
+            
+            <div class="mt-8 text-center">
+                <button onclick="resetToDefault()" class="text-[10px] text-gray-600 hover:text-red-500 underline">RESET ALL DATA</button>
             </div>
         </div>
     </div>
