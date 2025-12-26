@@ -1,14 +1,18 @@
-// 商品データ
-const products = [
+// --- データ管理ロジック (ここを変更しました) ---
+
+// デフォルトの商品データ（4つに絞りました）
+const defaultProducts = [
     { id: 1, title: "Tech Bomber", category: "Outerwear", price: 42000, desc: "撥水加工ナイロンと立体裁断。都市生活に最適化されたMA-1再構築モデル。", images: ["https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=800", "https://images.unsplash.com/photo-1559551409-dadc959f76b8?q=80&w=800"] },
     { id: 2, title: "Wide Cargo", category: "Pants", price: 26000, desc: "ワイドシルエットのカーゴパンツ。裾のドローコードでシルエット調整可能。", images: ["https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?q=80&w=800", "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=800"] },
     { id: 3, title: "Leather Rider", category: "Outerwear", price: 85000, desc: "最高級ラムレザーを使用したダブルライダース。経年変化を楽しめる一着。", images: ["https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?q=80&w=800", "https://images.unsplash.com/photo-1520975661595-64536ef8f6e8?q=80&w=800"] },
-    { id: 4, title: "Hoodie", category: "Tops", price: 18000, desc: "ヘビーウェイトコットンを使用したプルオーバーパーカー。フードの立ち上がりが美しい。", images: ["https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=800", "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800"] },
-    { id: 5, title: "Combat Boots", category: "Footwear", price: 32000, desc: "耐久性と軽量性を兼ね備えたコンバットブーツ。サイドジップ仕様。", images: ["https://images.unsplash.com/photo-1638247025967-b4e38f787b76?q=80&w=800", "https://images.unsplash.com/photo-1605733160314-4fc7dac4bb16?q=80&w=800"] },
-    { id: 6, title: "Tac Vest", category: "Outerwear", price: 24000, desc: "レイヤードスタイルに最適なタクティカルベスト。多機能ポケットを配置。", images: ["https://images.unsplash.com/photo-1560243563-062bfc001d68?q=80&w=800", "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800"] },
-    { id: 7, title: "Layered Coat", category: "Outerwear", price: 64000, desc: "異素材を組み合わせたロングコート。歩くたびに動きが出るドレープ感。", images: ["https://images.unsplash.com/photo-1512353087810-25dfcd100962?q=80&w=800", "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?q=80&w=800"] },
-    { id: 8, title: "Black Denim", category: "Pants", price: 22000, desc: "13ozのセルビッチデニム。ステッチまで同色で統一したソリッドな一本。", images: ["https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=800", "https://images.unsplash.com/photo-1548883354-94bcfe321cbb?q=80&w=800"] }
+    { id: 4, title: "Hoodie", category: "Tops", price: 18000, desc: "ヘビーウェイトコットンを使用したプルオーバーパーカー。フードの立ち上がりが美しい。", images: ["https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=800", "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800"] }
 ];
+
+// 管理画面で保存されたデータがあればそれを使い、なければデフォルト(4つ)を使う
+let storedData = localStorage.getItem('kryptos_products');
+let products = storedData ? JSON.parse(storedData) : defaultProducts;
+
+// --- 以下、既存の機能（変更なし） ---
 
 let cart = [];
 let currentSlide = 0;
@@ -16,10 +20,9 @@ let currentImages = [];
 let currentViewingProduct = null;
 let selectedSize = null;
 
-// 商品グリッドを描画する関数
 function renderGrid() {
     const grid = document.getElementById('product-grid');
-    if (!grid) return; // グリッドが見つからない場合は終了
+    if (!grid) return;
     
     grid.innerHTML = products.map((p) => `
         <div class="group cursor-pointer flex flex-col gap-3" onclick="handleProductClick(${p.id}, this)">
@@ -160,10 +163,8 @@ function nextSlide() { currentSlide = (currentSlide + 1) % currentImages.length;
 function prevSlide() { currentSlide = (currentSlide - 1 + currentImages.length) % currentImages.length; updateSlide(); }
 function goToSlide(i) { currentSlide = i; updateSlide(); }
 
-// 実行処理
-renderGrid(); // 即座にグリッドを表示
-
 window.addEventListener('load', () => {
+    renderGrid();
     setTimeout(() => { document.body.classList.add('loaded'); }, 2000);
     
     const track = document.getElementById('slider-track');
