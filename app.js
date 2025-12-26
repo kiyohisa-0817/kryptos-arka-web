@@ -1,112 +1,56 @@
-// --- データ管理 ---
-// 商品を4つに限定
-const defaultProducts = [
-    { id: 1, title: "Tech Bomber", category: "Outerwear", price: 42000, desc: "撥水加工ナイロンと立体裁断。都市生活に最適化されたMA-1再構築モデル。", images: ["https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=800", "https://images.unsplash.com/photo-1559551409-dadc959f76b8?q=80&w=800"] },
-    { id: 2, title: "Wide Cargo", category: "Pants", price: 26000, desc: "ワイドシルエットのカーゴパンツ。裾のドローコードでシルエット調整可能。", images: ["https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?q=80&w=800", "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=800"] },
-    { id: 3, title: "Leather Rider", category: "Outerwear", price: 85000, desc: "最高級ラムレザーを使用したダブルライダース。経年変化を楽しめる一着。", images: ["https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?q=80&w=800", "https://images.unsplash.com/photo-1520975661595-64536ef8f6e8?q=80&w=800"] },
-    { id: 4, title: "Hoodie", category: "Tops", price: 18000, desc: "ヘビーウェイトコットンを使用したプルオーバーパーカー。フードの立ち上がりが美しい。", images: ["https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=800", "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800"] }
+// ============================================
+//   PRODUCT CONFIGURATION
+//   ここにBASEやShopifyの商品情報を入力してください
+// ============================================
+
+const products = [
+    { 
+        id: 1, 
+        title: "Tech Bomber", 
+        category: "Outerwear", 
+        price: 42000, 
+        desc: "撥水加工ナイロンと立体裁断。都市生活に最適化されたMA-1再構築モデル。", 
+        // ↓↓ ここにBASEの商品ページURLを貼る ↓↓
+        link: "https://your-shop-name.base.shop/items/12345678", 
+        images: ["https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=800", "https://images.unsplash.com/photo-1559551409-dadc959f76b8?q=80&w=800"] 
+    },
+    { 
+        id: 2, 
+        title: "Wide Cargo", 
+        category: "Pants", 
+        price: 26000, 
+        desc: "ワイドシルエットのカーゴパンツ。裾のドローコードでシルエット調整可能。", 
+        // ↓↓ ここにBASEの商品ページURLを貼る ↓↓
+        link: "https://your-shop-name.base.shop/items/87654321",
+        images: ["https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?q=80&w=800", "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=800"] 
+    },
+    { 
+        id: 3, 
+        title: "Leather Rider", 
+        category: "Outerwear", 
+        price: 85000, 
+        desc: "最高級ラムレザーを使用したダブルライダース。経年変化を楽しめる一着。", 
+        link: "https://your-shop-name.base.shop/items/xxxxxxxx",
+        images: ["https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?q=80&w=800", "https://images.unsplash.com/photo-1520975661595-64536ef8f6e8?q=80&w=800"] 
+    },
+    { 
+        id: 4, 
+        title: "Hoodie", 
+        category: "Tops", 
+        price: 18000, 
+        desc: "ヘビーウェイトコットンを使用したプルオーバーパーカー。フードの立ち上がりが美しい。", 
+        link: "https://your-shop-name.base.shop/items/yyyyyyyy",
+        images: ["https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=800", "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800"] 
+    }
 ];
 
-let products = JSON.parse(localStorage.getItem('kryptos_products')) || defaultProducts;
+// ============================================
+//   SYSTEM LOGIC (DO NOT TOUCH BELOW)
+// ============================================
 
-// --- 隠し機能（5回タップ） ---
-let tapCount = 0;
-let tapTimer = null;
-
-function setupSecretAdmin() {
-    const footerLogo = document.querySelector('footer a'); // フッターのロゴを取得
-    if(!footerLogo) return;
-
-    footerLogo.addEventListener('click', (e) => {
-        e.preventDefault(); // ページトップへの移動を防ぐ
-        tapCount++;
-        
-        // タップ間隔が長すぎたらリセット
-        clearTimeout(tapTimer);
-        tapTimer = setTimeout(() => { tapCount = 0; }, 2000);
-
-        if (tapCount === 5) {
-            const password = prompt("ADMIN PASSWORD REQUIRED");
-            if (password === "0817") { // パスワードはここで変更可能
-                openAdmin();
-            } else {
-                alert("ACCESS DENIED");
-            }
-            tapCount = 0;
-        }
-    });
-}
-
-// --- 管理画面ロジック ---
-function openAdmin() {
-    renderAdminList();
-    document.getElementById('admin-modal').classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeAdmin() {
-    document.getElementById('admin-modal').classList.add('hidden');
-    document.body.style.overflow = '';
-    renderGrid(); // 変更をサイトに反映
-}
-
-function renderAdminList() {
-    const list = document.getElementById('admin-list');
-    list.innerHTML = products.map((p, i) => `
-        <div class="flex justify-between items-center bg-gray-900 border border-gray-800 p-3">
-            <div class="flex items-center gap-4">
-                <img src="${p.images[0]}" class="w-8 h-8 object-cover bg-gray-800 opacity-50">
-                <span class="text-xs text-gray-300 font-mono">${p.title}</span>
-            </div>
-            <button onclick="deleteProduct(${i})" class="text-[10px] text-red-500 hover:text-white border border-red-900/50 hover:bg-red-900 px-3 py-1 transition-colors">DEL</button>
-        </div>
-    `).join('');
-}
-
-function addProduct() {
-    const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
-    const newProduct = {
-        id: newId,
-        title: document.getElementById('p-title').value,
-        category: document.getElementById('p-category').value,
-        price: Number(document.getElementById('p-price').value),
-        desc: document.getElementById('p-desc').value,
-        images: [
-            document.getElementById('p-img1').value,
-            document.getElementById('p-img2').value || "https://placehold.co/800x1000/111/fff?text=No+Image"
-        ]
-    };
-    products.push(newProduct);
-    saveData();
-    renderAdminList();
-    document.querySelector('#admin-modal form').reset();
-}
-
-function deleteProduct(index) {
-    if(!confirm('DELETE THIS ITEM?')) return;
-    products.splice(index, 1);
-    saveData();
-    renderAdminList();
-}
-
-function resetToDefault() {
-    if(!confirm('RESET ALL DATA?')) return;
-    localStorage.removeItem('kryptos_products');
-    products = [...defaultProducts]; // デフォルトに戻す
-    renderAdminList();
-    alert('RESET COMPLETE');
-}
-
-function saveData() {
-    localStorage.setItem('kryptos_products', JSON.stringify(products));
-}
-
-// --- サイト機能（既存） ---
-let cart = [];
 let currentSlide = 0;
 let currentImages = [];
 let currentViewingProduct = null;
-let selectedSize = null;
 
 function renderGrid() {
     const grid = document.getElementById('product-grid');
@@ -128,23 +72,6 @@ function renderGrid() {
     `).join('');
 }
 
-function showHome() { switchView('home-view'); }
-function showCart() { renderCartItems(); switchView('cart-view'); }
-function showCheckout() { switchView('checkout-view'); }
-
-function switchView(id) {
-    document.querySelectorAll('.view-section').forEach(el => {
-        el.classList.remove('active');
-        setTimeout(() => { if(!el.classList.contains('active')) el.style.display = 'none'; }, 500);
-    });
-    const target = document.getElementById(id);
-    if(target) {
-        target.style.display = 'block';
-        setTimeout(() => target.classList.add('active'), 10);
-        window.scrollTo(0,0);
-    }
-}
-
 function handleProductClick(id, element) {
     const img = element.querySelector('.grid-item-img');
     img.classList.add('clicked');
@@ -155,13 +82,21 @@ function openModal(id) {
     const p = products.find(x => x.id === id);
     if(!p) return;
     currentViewingProduct = p;
-    selectedSize = null; 
-    document.querySelectorAll('.size-btn').forEach(btn => { btn.classList.remove('bg-black', 'text-white', 'border-black'); btn.classList.add('text-gray-500', 'border-gray-200'); });
-    document.getElementById('size-error').classList.add('hidden');
+
     document.getElementById('modal-title').innerText = p.title;
     document.getElementById('modal-category').innerText = p.category;
     document.getElementById('modal-price').innerText = `¥${p.price.toLocaleString()}`;
     document.getElementById('modal-desc').innerText = p.desc;
+    
+    // Set Link
+    const linkBtn = document.getElementById('modal-link');
+    if (p.link) {
+        linkBtn.href = p.link;
+        linkBtn.style.display = 'flex';
+    } else {
+        linkBtn.style.display = 'none';
+    }
+
     currentImages = p.images;
     currentSlide = 0;
     renderSlider();
@@ -172,66 +107,6 @@ function openModal(id) {
 function closeModal() {
     document.getElementById('product-modal').classList.remove('active');
     document.body.style.overflow = '';
-}
-
-function selectSize(btn, size) {
-    selectedSize = size;
-    document.querySelectorAll('.size-btn').forEach(b => { b.classList.remove('bg-black', 'text-white', 'border-black'); b.classList.add('text-gray-500', 'border-gray-200'); });
-    btn.classList.remove('text-gray-500', 'border-gray-200');
-    btn.classList.add('bg-black', 'text-white', 'border-black');
-    document.getElementById('size-error').classList.add('hidden');
-}
-
-function addToCartFromModal(btn) {
-    if(!selectedSize) { document.getElementById('size-error').classList.remove('hidden'); return; }
-    const span = btn.querySelector('span');
-    const original = span.innerText;
-    span.innerText = "ADDED";
-    btn.classList.add('bg-gray-600');
-    cart.push({ ...currentViewingProduct, size: selectedSize });
-    updateCartCount();
-    setTimeout(() => { span.innerText = original; btn.classList.remove('bg-gray-600'); closeModal(); }, 800);
-}
-
-function updateCartCount() {
-    const badge = document.getElementById('cart-count');
-    badge.innerText = cart.length;
-    if(cart.length > 0) { badge.classList.remove('scale-0', 'opacity-0'); badge.classList.add('scale-100', 'opacity-100'); } else { badge.classList.add('scale-0', 'opacity-0'); }
-}
-
-function renderCartItems() {
-    const container = document.getElementById('cart-items-container');
-    const summary = document.getElementById('cart-summary');
-    if(cart.length === 0) {
-        container.innerHTML = '<div class="flex flex-col items-center justify-center py-20 opacity-50"><i class="fas fa-shopping-bag text-4xl mb-4 text-gray-400"></i><p class="text-sm font-mono tracking-widest text-gray-500">YOUR CART IS EMPTY</p></div>';
-        summary.classList.add('hidden');
-        return;
-    }
-    summary.classList.remove('hidden');
-    let html = '';
-    let total = 0;
-    cart.forEach((item, index) => {
-        total += item.price;
-        html += `
-            <div class="flex gap-4 md:gap-8 items-start animate-slide-up" style="animation-delay: ${index * 0.1}s">
-                <div class="w-24 h-32 md:w-32 md:h-40 bg-gray-100 flex-shrink-0"><img src="${item.images[0]}" class="w-full h-full object-cover"></div>
-                <div class="flex-1 flex flex-col h-32 md:h-40 justify-between">
-                    <div><h3 class="text-lg font-header font-bold uppercase leading-none mb-1 text-black">${item.title}</h3><p class="text-xs text-gray-500 font-mono mb-2">SIZE: ${item.size}</p><p class="text-sm font-mono text-black">¥${item.price.toLocaleString()}</p></div>
-                    <button onclick="removeFromCart(${index})" class="text-[10px] text-gray-400 hover:text-black underline self-start tracking-widest uppercase">Remove</button>
-                </div>
-            </div>`;
-    });
-    container.innerHTML = html;
-    document.getElementById('cart-subtotal').innerText = `¥${total.toLocaleString()}`;
-    document.getElementById('cart-total').innerText = `¥${total.toLocaleString()}`;
-}
-
-function removeFromCart(index) { cart.splice(index, 1); updateCartCount(); renderCartItems(); }
-
-function processPayment() {
-    const btn = document.querySelector('#checkout-view button[type="submit"]');
-    btn.innerText = "PROCESSING...";
-    setTimeout(() => { cart = []; updateCartCount(); alert("ORDER COMPLETE. THANK YOU FOR SHOPPING WITH kryptos ARKA."); showHome(); btn.innerText = "PAY NOW"; }, 2000);
 }
 
 function renderSlider() {
@@ -251,7 +126,6 @@ function prevSlide() { currentSlide = (currentSlide - 1 + currentImages.length) 
 function goToSlide(i) { currentSlide = i; updateSlide(); }
 
 window.addEventListener('load', () => {
-    setupSecretAdmin(); // 隠し機能を有効化
     renderGrid();
     setTimeout(() => { document.body.classList.add('loaded'); }, 2000);
     
