@@ -1,6 +1,5 @@
-// --- データ管理ロジック (ここを変更しました) ---
-
-// デフォルトの商品データ（4つに絞りました）
+// --- データ管理 ---
+// 商品を4つに限定
 const defaultProducts = [
     { id: 1, title: "Tech Bomber", category: "Outerwear", price: 42000, desc: "撥水加工ナイロンと立体裁断。都市生活に最適化されたMA-1再構築モデル。", images: ["https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=800", "https://images.unsplash.com/photo-1559551409-dadc959f76b8?q=80&w=800"] },
     { id: 2, title: "Wide Cargo", category: "Pants", price: 26000, desc: "ワイドシルエットのカーゴパンツ。裾のドローコードでシルエット調整可能。", images: ["https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?q=80&w=800", "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=800"] },
@@ -8,12 +7,101 @@ const defaultProducts = [
     { id: 4, title: "Hoodie", category: "Tops", price: 18000, desc: "ヘビーウェイトコットンを使用したプルオーバーパーカー。フードの立ち上がりが美しい。", images: ["https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=800", "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800"] }
 ];
 
-// 管理画面で保存されたデータがあればそれを使い、なければデフォルト(4つ)を使う
-let storedData = localStorage.getItem('kryptos_products');
-let products = storedData ? JSON.parse(storedData) : defaultProducts;
+let products = JSON.parse(localStorage.getItem('kryptos_products')) || defaultProducts;
 
-// --- 以下、既存の機能（変更なし） ---
+// --- 隠し機能（5回タップ） ---
+let tapCount = 0;
+let tapTimer = null;
 
+function setupSecretAdmin() {
+    const footerLogo = document.querySelector('footer a'); // フッターのロゴを取得
+    if(!footerLogo) return;
+
+    footerLogo.addEventListener('click', (e) => {
+        e.preventDefault(); // ページトップへの移動を防ぐ
+        tapCount++;
+        
+        // タップ間隔が長すぎたらリセット
+        clearTimeout(tapTimer);
+        tapTimer = setTimeout(() => { tapCount = 0; }, 2000);
+
+        if (tapCount === 5) {
+            const password = prompt("ADMIN PASSWORD REQUIRED");
+            if (password === "0817") { // パスワードはここで変更可能
+                openAdmin();
+            } else {
+                alert("ACCESS DENIED");
+            }
+            tapCount = 0;
+        }
+    });
+}
+
+// --- 管理画面ロジック ---
+function openAdmin() {
+    renderAdminList();
+    document.getElementById('admin-modal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeAdmin() {
+    document.getElementById('admin-modal').classList.add('hidden');
+    document.body.style.overflow = '';
+    renderGrid(); // 変更をサイトに反映
+}
+
+function renderAdminList() {
+    const list = document.getElementById('admin-list');
+    list.innerHTML = products.map((p, i) => `
+        <div class="flex justify-between items-center bg-gray-900 border border-gray-800 p-3">
+            <div class="flex items-center gap-4">
+                <img src="${p.images[0]}" class="w-8 h-8 object-cover bg-gray-800 opacity-50">
+                <span class="text-xs text-gray-300 font-mono">${p.title}</span>
+            </div>
+            <button onclick="deleteProduct(${i})" class="text-[10px] text-red-500 hover:text-white border border-red-900/50 hover:bg-red-900 px-3 py-1 transition-colors">DEL</button>
+        </div>
+    `).join('');
+}
+
+function addProduct() {
+    const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+    const newProduct = {
+        id: newId,
+        title: document.getElementById('p-title').value,
+        category: document.getElementById('p-category').value,
+        price: Number(document.getElementById('p-price').value),
+        desc: document.getElementById('p-desc').value,
+        images: [
+            document.getElementById('p-img1').value,
+            document.getElementById('p-img2').value || "https://placehold.co/800x1000/111/fff?text=No+Image"
+        ]
+    };
+    products.push(newProduct);
+    saveData();
+    renderAdminList();
+    document.querySelector('#admin-modal form').reset();
+}
+
+function deleteProduct(index) {
+    if(!confirm('DELETE THIS ITEM?')) return;
+    products.splice(index, 1);
+    saveData();
+    renderAdminList();
+}
+
+function resetToDefault() {
+    if(!confirm('RESET ALL DATA?')) return;
+    localStorage.removeItem('kryptos_products');
+    products = [...defaultProducts]; // デフォルトに戻す
+    renderAdminList();
+    alert('RESET COMPLETE');
+}
+
+function saveData() {
+    localStorage.setItem('kryptos_products', JSON.stringify(products));
+}
+
+// --- サイト機能（既存） ---
 let cart = [];
 let currentSlide = 0;
 let currentImages = [];
@@ -23,7 +111,6 @@ let selectedSize = null;
 function renderGrid() {
     const grid = document.getElementById('product-grid');
     if (!grid) return;
-    
     grid.innerHTML = products.map((p) => `
         <div class="group cursor-pointer flex flex-col gap-3" onclick="handleProductClick(${p.id}, this)">
             <div class="relative w-full aspect-[3/4] bg-gray-100 overflow-hidden rounded-sm">
@@ -164,6 +251,7 @@ function prevSlide() { currentSlide = (currentSlide - 1 + currentImages.length) 
 function goToSlide(i) { currentSlide = i; updateSlide(); }
 
 window.addEventListener('load', () => {
+    setupSecretAdmin(); // 隠し機能を有効化
     renderGrid();
     setTimeout(() => { document.body.classList.add('loaded'); }, 2000);
     
